@@ -1,4 +1,4 @@
-#include <superkarel.h>
+#include <superkarel.h> 
 
 void turn_right();
 void turn_around();
@@ -23,12 +23,17 @@ int main()
             break;
         }
     }
-    while (front_is_clear() && right_is_clear())
+    while (front_is_clear())
     {
         floor_cleaning();
         turn_around();
         floor_making();
         turning();
+        if (front_is_blocked() && right_is_blocked())
+        {
+            turn_left();
+            break;
+        }
     }
   
     run_forest_run();
@@ -151,6 +156,10 @@ void turning()
         if (facing_west())
         {
             turn_left();
+            if (front_is_blocked() && right_is_blocked())
+            {
+                break;
+            }
             step();
             turn_left();
             if (front_is_clear())
@@ -219,4 +228,4 @@ void run_forest_run()
         }
     }
     turn_around();
-}
+} 
