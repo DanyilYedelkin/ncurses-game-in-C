@@ -176,17 +176,17 @@ unsigned long sum_squared(const int line){
 	return ret;
 }
 int array_min(const int input_array[], const int array_size){
-    int edge = 2147483647;
-    unsigned long small_number = edge + 4;
+    int small_number = 2147483647;
 
+    if (input_array == NULL){
+        return -1;
+    }
     for(int j = 0; j < array_size; j++){
         if (small_number > input_array[j]){
             small_number = input_array[j];
         }
     }
-    if (input_array == NULL){
-        return -1;
-    }
+    
     return small_number;
 }
 int array_max(const int input_array[], const int array_size){
