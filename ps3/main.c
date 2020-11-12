@@ -1,11 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/stat.h>
-#include "hangman.h"
-#include "hangman.c"
 #include <time.h>
-#include <string.h>
-#include <ctype.h>
+#include "hangman.h"
 
 int main(){
     srand(time(NULL));
