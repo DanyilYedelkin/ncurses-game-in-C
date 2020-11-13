@@ -71,7 +71,7 @@ void get_guessed_word(const char secret[], const char letters_guessed[], char gu
     printf("%s", guessed_word);*/
 
     char *unknown;
-    guessed_word[strlen(secret)-1] = '\0';
+    guessed_word[strlen(secret)] = '\0';
             unknown = (char *) malloc(15); 
             int value = 0, i;
             for(i = 1; i < strlen(secret); i++){
@@ -136,6 +136,13 @@ void hangman(const char secret[]){
     printf("Welcome to the game, Hangman!\n");
     printf("I am thinking of a word that is %ld letters long.", strlen(secret));
     
+    char secrets[30];
+    for(int m = 1; m < (strlen(secret)*2); m++){
+        secrets[m-1] = m % 2 == 0 ? ' ' : secret[value++];
+    }
+    secrets[(strlen(secrets)*2)-1] = '\0';
+    value = 0;
+
     for(int attempt = 8; attempt != 0;){
         printf("\n-------------\n");
         printf("You have %d guesses left.\n", attempt);
@@ -144,8 +151,25 @@ void hangman(const char secret[]){
         printf("\nPlease guess a letter: ");
         scanf("%c", &letter); 
         if(letter == 0x0A){
-            printf("Oops! '%c' is not a valid letter:", letter);
-            get_guessed_word(secret, letters_guessed, result);
+            printf("Oops! '%c' is not a valid letter: ", letter);
+            int value = 0, i;
+            char *unknown;
+
+            unknown = (char *) malloc(15);
+            for(i = 1; i < (strlen(secret)*2); i++){
+                if (i % 2 != 0) {
+                    unknown = strchr(letters_guessed, secret[value++]);
+                    if(unknown != NULL){
+                        result[i-1] = *unknown;
+                    } else{
+                        result[i-1] = '_';
+                    }
+                } else{
+                    result[i-1] = ' ';
+                }
+            }
+            result[(strlen(secret)*2)-1] = '\0';
+            printf("%s", result);
             continue;
         }
 
@@ -155,7 +179,7 @@ void hangman(const char secret[]){
 
         if (!strchr(alphabet, letter)){
             if(letter < 97){
-                printf("Oops! '%c' is not a valid letter:", letter);
+                printf("Oops! '%c' is not a valid letter: ", letter);
                 //get_guessed_word(secret, letters_guessed, result);
                 char *unknown;
 
@@ -180,7 +204,7 @@ void hangman(const char secret[]){
                 continue;
             }
             if(letter > 122){
-                printf("Oops! '%c' is not a valid letter:", letter);
+                printf("Oops! '%c' is not a valid letter: ", letter);
                 //get_guessed_word(secret, letters_guessed, result);
                 char *unknown;
 
@@ -232,7 +256,7 @@ void hangman(const char secret[]){
         letters_guessed[value++] = letter; 
     
         if (strchr(secret, letter)){
-            printf("Goog quess: ");
+            printf("Good guess: ");
             //get_guessed_word(secret, letters_guessed, result);
             char *unknown;
             unknown = (char *) malloc(15); 
@@ -251,18 +275,17 @@ void hangman(const char secret[]){
             }
             result[(strlen(secret)*2)-1] = '\0';
             printf("%s", result);
-            
+            if (strcmp(secrets, result) == 0) {
+                printf("\n-------------\n");
+                printf("\nCongratulations, you won!\n");  
+                break; 
+            }
             /*if(is_word_guessed(unknow_word, result) == 0){
                 printf("\n-----------------------\n");
                 printf("\n");
                 printf("Congratulations, you won!\n"); 
                 break;
             } */
-            if (strcmp(secret, result) == 0) {
-                printf("\n-------------\n");
-                printf("Congratulations, you won!\n");  
-                break; 
-            }
         } else{
             printf("Oops! That letter is not in my word: ");
             //get_guessed_word(secret, letters_guessed, result);
@@ -286,9 +309,12 @@ void hangman(const char secret[]){
             
             attempt--; 
         }
-        
+        if (strcmp(secrets, result) == 0) {
+            printf("\n-------------\n");
+            printf("\nCongratulations, you won!\n");  
+            break; 
+        }
         if (attempt == 0) {
-            //printf("\n-----------------------\n");
             printf("\n-------------\n");
             printf("Sorry, you ran out of guesses. The word was %s.\n", secret);
             break; 
