@@ -71,7 +71,6 @@ void get_guessed_word(const char secret[], const char letters_guessed[], char gu
     printf("%s", guessed_word);*/
 
     char *unknown;
-    //guessed_word[strlen(secret)] = '\0';
             unknown = (char *) malloc(15); 
             int value = 0, i;
             for(i = 1; i < strlen(secret); i++){
@@ -82,7 +81,7 @@ void get_guessed_word(const char secret[], const char letters_guessed[], char gu
                         guessed_word[i-1] = '_';
                     }
             }
-            guessed_word[strlen(secret)] = '\0';
+            guessed_word[strlen(secret)+1] = '\0';
             printf("%s", guessed_word);
 
 }
@@ -141,7 +140,7 @@ void hangman(const char secret[]){
     for(int m = 1; m < (strlen(secret)*2); m++){
         secrets[m-1] = m % 2 == 0 ? ' ' : secret[value++];
     }
-    secrets[(strlen(secrets)*2)-1] = '\0';
+    secrets[(strlen(secret)*2)-1] = '\0';
     value = 0;
 
     for(int attempt = 8; attempt != 0;){
@@ -151,7 +150,12 @@ void hangman(const char secret[]){
         get_available_letters(letters_guessed, alphabet);
         printf("\nPlease guess a letter: ");
         scanf("%c", &letter); 
-        if(letter == 0x0A){
+        if (strcmp(secrets, result) == 0) {
+            printf("\n-------------\n");
+            printf("Congratulations, you won!\n");  
+            break; 
+        }
+        /*if(letter == 0x0A){
             printf("Oops! '%c' is not a valid letter: ", letter);
             int value = 0, i;
             char *unknown;
@@ -172,7 +176,7 @@ void hangman(const char secret[]){
             result[(strlen(secret)*2)-1] = '\0';
             printf("%s", result);
             continue;
-        }
+        }*/
 
         while(getchar() != '\n')
         ; 
