@@ -50,33 +50,9 @@ int main(){
     printf("%s\n", string);
     printf("\n-------------------\n");*/
 
-    //==============================
+    //==============================*/
 
-   /* int length = 4+1, cols = 2, offset = 4;
-    bool bytes11[7][8] = {
-	{0, 1, 1, 1, 1, 0, 1, 0},
-	{0, 1, 1, 0, 1, 0, 0, 1},
-	{0, 1, 1, 1, 0, 0, 1, 1},
-	{0, 1, 1, 0, 1, 0, 1, 1},
-	{0, 1, 1, 0, 0, 0, 0, 1},
-	{0, 1, 1, 1, 0, 1, 0, 0},
-	{0, 0, 0, 0, 0, 0, 0, 0}
-};
-    bool blocks11[offset*8][cols];
-    bytes_to_blocks(cols, offset, blocks11, length, bytes11);
-    for(int j = 0; j < offset*8; j++){
-        for(int i = 0; i < cols; i++){
-            printf("%d ", (blocks11[j][i] == true) ? 1 : 0);
-        }
-        printf("\n");
-        if(j % 8 == 7){
-            printf("\n");
-        }
-    }*/
-
-    printf("----------------\n");
-    //int length = 7;
-    bool blocks2[4*8][2] = {
+    bool blocks[4*8][2] = {
 	{0, 0},
 	{1, 1},
 	{1, 1},
@@ -110,14 +86,15 @@ int main(){
 	{0, 0},
 	{0, 0}
 };
-bool bytes2[7][8];
-blocks_to_bytes(2, 4*8, blocks2, 7, bytes2);
+bool bytes[7][8];
+blocks_to_bytes(2, 4, blocks, 7, bytes);
 for(int j = 0; j < 7; j++){
     for(int i = 0; i < 8; i++){
-        printf("%d", bytes2[j][i]);
+        printf("%d", bytes[j][i]);
     }
     printf("\n");
 }
+    printf("----------------\n");
 
     return 0;
 }
@@ -194,76 +171,143 @@ void decode_bytes(const int rows, bool bytes[rows][8], char string[rows]){
     }
 }
 void bytes_to_blocks(const int cols, const int offset, bool blocks[offset*8][cols], const int rows, bool bytes[rows][8]){
-    for(int i = 0; i < 8; i++){
-        for(int j = 0; j < cols; j++){
-            blocks[i][j] = bytes[j][i];
+    int value = 0;
+    int number = 0;
+    for(int i = 0; i < cols; i++){
+        number = 0;
+        for(int j = 0; j < 8; j++){
+            blocks[j][i] = bytes[value][number];
+            number++;
         }
+        value++;
     }
     if(offset > 1){
-    for(int i = 8; i < 16; i++){
-        for(int j = 0; j < cols; j++){
-            blocks[i][j] = bytes[cols - 1 + j][i];
+        for(int i = 0; i < cols; i++){
+            number = 0;
+            if(value < rows){
+                for(int j = 8; j < 16; j++){
+                    blocks[j][i] = bytes[value][number];
+                    number++;
+                }
+            }
+            if(value >= rows){
+                for(int j = 8; j < 16; j++){
+                    blocks[j][i] = 0;
+                }
+            }
+            value++;
         }
     }
-    }
-    
     if(offset > 2){
-    for(int i = 16; i < 24; i++){
-        for(int j = 0; j < cols; j++){
-            blocks[i][j] = bytes[cols + j][i];
+        for(int i = 0; i < cols; i++){
+            number = 0;
+            if(value < rows){
+                for(int j = 16; j < 24; j++){
+                    blocks[j][i] = bytes[value][number];
+                    number++;
+                }
+            }
+            if(value >= rows){
+                for(int j = 16; j < 24; j++){
+                    blocks[j][i] = 0;
+                }
+            }
+            value++;
         }
     }
-    }
-    
     if(offset > 3){
-    for(int i = 24; i < 32; i++){
-        for(int j = 1; j < cols; j++){
-            blocks[i][j] = bytes[cols + j][i];
+        for(int i = 0; i < cols; i++){
+            number = 0;
+            if(value < rows){
+                for(int j = 24; j < 32; j++){
+                    blocks[j][i] = bytes[value][number];
+                    number++;
+                }
+            }
+            if(value >= rows){
+                for(int j = 24; j < 32; j++){
+                    blocks[j][i] = 0;
+                }
+            }
+            value++;
         }
     }
+    if(offset > 4){
+        for(int i = 0; i < cols; i++){
+            number = 0;
+            if(value < rows){
+                for(int j = 32; j < 40; j++){
+                    blocks[j][i] = bytes[value][number];
+                    number++;
+                }
+            }
+            if(value >= rows){
+                for(int j = 32; j < 40; j++){
+                    blocks[j][i] = 0;
+                }
+            }
+            value++;
+        }
     }
 }
 
 void blocks_to_bytes(const int cols, const int offset, bool blocks[offset*8][cols], const int rows, bool bytes[rows][8]){
-    //for(int offset_counter = 0; offset_counter < offset; offset_counter++){
-        for(int i = 0; i < rows; i++){
-            for(int j = 0; j < 8; j++){
-                bytes[i][j] = blocks[j][i];
+    int value = 0;
+    int number = 0;
+    for(int i = 0; i < cols; i++){
+        number = 0;
+        for(int j = 0; j < 8; j++){
+            bytes[value][number] = blocks[j][i];
+            number++;
+        }
+        value++;
+    }
+    if(offset > 1){
+        for(int i = 0; i < cols; i++){
+        number = 0;
+        if(value < rows){
+            for(int j = 8; j < 16; j++){
+                bytes[value][number] = blocks[j][i];
+                number++;
             }
         }
-    //}
-    for(int i = 0; i < cols; i++){
-        for(int j = 0; j < 8; j++){
-            bytes[i][j] = blocks[j][i];
+        value++;
+    }
+    }
+    if(offset > 2){
+        for(int i = 0; i < cols; i++){
+            number = 0;
+            if(value < rows){
+                for(int j = 16; j < 24; j++){
+                    bytes[value][number] = blocks[j][i];
+                    number++;
+                }
+            }
+            value++;
         }
     }
-    int value3 = 0;
-    for(int i = 0; i < cols; i++){
-        for(int j = 0; j < 8; j++){
-            bytes[2][j] = blocks[value3++ - 1][2];  
+    if(offset > 3){
+        for(int i = 0; i < cols; i++){
+            number = 0;
+            if(value < rows){
+                for(int j = 24; j < 32; j++){
+                    bytes[value][number] = blocks[j][i];
+                    number++;
+                }
+            }
+            value++;
         }
     }
-
-    for(int i = 0; i < cols; i++){
-        for(int j = 0; j < 8; j++){
-            bytes[3][j] = blocks[j+8][i];  
-        }
-    }
-    int value2 = 8;
-    for(int i = 0; i < cols; i++){
-        for(int j = 0; j < 8; j++){
-            bytes[4][j] = blocks[value2++ - 1][2];  
-        }
-    }
-    int value = 8;
-    for(int i = 0; i < cols; i++){
-        for(int j = 0; j < 8; j++){
-            bytes[5][j] = blocks[value++][i]; 
-        }
-    }
-    for(int i = 0; i < cols; i++){
-        for(int j = 0; j < 8; j++){
-            bytes[6][j] = blocks[0][0]; 
+    if(offset > 4){
+        for(int i = 0; i < cols; i++){
+            number = 0;
+            if(value < rows){
+                for(int j = 32; j < 40; j++){
+                    bytes[value][number] = blocks[j][i];
+                    number++;
+                }
+            }
+            value++;
         }
     }
 }
