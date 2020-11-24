@@ -3,20 +3,20 @@
 
 int main(int argc, char* argv[]){
     if(argc != 3){
-        perror("Wrong number of parameters.\n");  //printf("");
-        exit(EXIT_FAILURE);  //exit (0);
+        printfrror("Wrong number of parameters.\n");  //printf("");
+        return 1;  //exit (0);
     }
     FILE *fp = fopen(argv[1], "r");
     
     if(fp == NULL){
-        perror("Error opening file.\n");  //printf("");
-        exit(EXIT_FAILURE);  //exit(0);
+        printf("Error opening file.\n");  //printf("");
+        return 1;  //exit(0);
     }
     FILE *fs = fopen(argv[2], "w");
     
     if(fs == NULL){
-        perror("Error opening file.\n");  //printf("");
-        exit(EXIT_FAILURE);  //exit(0);
+        printf("Error opening file.\n");  //printf("");
+        return 1;  //exit(0);
     }
 
     char ch = fgetc(fp);
@@ -79,5 +79,5 @@ int main(int argc, char* argv[]){
     fclose(fp);
     fclose(fs);
 
-    return EXIT_SUCCESS;
+    return 0;
 }
