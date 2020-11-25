@@ -3,7 +3,7 @@
 
 int main(int argc, char* argv[]){
     if(argc != 3){
-        printfrror("Wrong number of parameters.\n");  //printf("");
+        printf("Wrong number of parameters.\n");  //printf("");
         return 1;  //exit (0);
     }
     FILE *fp = fopen(argv[1], "r");
