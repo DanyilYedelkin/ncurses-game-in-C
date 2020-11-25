@@ -10,6 +10,7 @@ int main(int argc, char* argv[]){
     
     if(fp == NULL){
         printf("Error opening file.\n");
+        fclose(fp);
         return 1;
     }
 
