@@ -10,12 +10,14 @@ int main(int argc, char* argv[]){
     
     if(fp == NULL){
         printf("Error opening file.\n");  //printf("");
+        fclose(fp);
         return 1;  //exit(0);
     }
     FILE *fs = fopen(argv[2], "w");
     
     if(fs == NULL){
         printf("Error opening file.\n");  //printf("");
+        fclose(fs);
         return 1;  //exit(0);
     }
 
