@@ -3,15 +3,14 @@
 
 int main(int argc, char* argv[]){
     if(argc != 2){
-        printf("Wrong number of parameters.\n");  //printf("");
-        return 1;  //exit (0);
+        printf("Wrong number of parameters.\n");
+        return 1;
     }
     FILE *fp = fopen(argv[1], "r");
     
     if(fp == NULL){
-        printf("Error opening file.\n");  //printf("");
-        fclose(fp);
-        return 1;  //exit(0);
+        printf("Error opening file.\n");
+        return 1;
     }
 
     int counter = 48;
