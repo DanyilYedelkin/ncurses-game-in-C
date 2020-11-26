@@ -21,8 +21,8 @@ int main(int argc, char* argv[]){
         return 1;
     }
     
-    char input[1000];
-    char between[1000];
+    char input[10000];
+    char between[10000];
     int input_length = 0;
     int between_length = 0;
     
@@ -39,7 +39,7 @@ int main(int argc, char* argv[]){
         if(input[i] == 'S' && input[i+1] == 'T' && input[i+2] == 'A' && input[i+3] == 'R' && input[i+4] == 'T'){
             for(int j = i+6; j < input_length; j++){
                 if(input[j] == 'S' && input[j+1] == 'T' && input[j+2] == 'O' && input[j+3] == 'P'){
-                    between[between_length - 1] = '\0';
+                    between[between_length] = '\0';
                     break;
                 }
                 between[between_length] = input[j];
@@ -50,47 +50,33 @@ int main(int argc, char* argv[]){
     
     int i = 0;
     int value = 0;
-    int k = 0;
-    char output[1000];
+    char output[10000];
 
     while(between[i] != '\0'){
         while(between[i] != ' '){
             if(between[i+1] != '\0'){
                 i++;
-                k++;
             } else{
                 break;
             }
         }
         i++;
-        k++;
         while(between[i] != ' '){
             if(between[i+1] != '\0'){
                 output[value] = between[i];
                 i++;
-                k++;
                 value++;
             } else{
                 break;
             }
         }
         if(between[i+1] != '\0'){
-            if(between[k] == ' '){
-                k++;
-                while(between[k] != ' '){
-                    k++;
-                }
-                if(between[k] == '\0'){
-                    output[value - 1] = '\0';
-                    break;
-                }
-            }
             output[value] = between[i];
             i++;
-            k++;
             value++;
         }
     }
+    output[value] = '\0';
 
     int j = 0;
     while(output[j] != '\0'){
