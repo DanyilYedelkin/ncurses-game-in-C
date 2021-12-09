@@ -1,8 +1,3 @@
-/* Hi, I'm Danyil Yedelkin. I want to show you my game and I think it will be much more atmospheric if you play the game and listen to soundtracks from the game The Witcher 3 :D 
-music for relaxing during the passage of my game https://www.youtube.com/watch?v=_8URgTk_9eY&ab_channel=EpicMusicMix 
-
-In the end You can find the code of my second game, please, I will be very happy if You check my second game, because I sat over it for a long time...
-*/
 #include <stdio.h>
 #include <ncurses.h>
 #include <stdlib.h>
@@ -143,7 +138,6 @@ int MakeScreen(){
     return 1;
 }
 void painting(){
-    /* stoled and changed the code from the website https://tldp.org/HOWTO/html_single/NCURSES-Programming-HOWTO/#WHERETOGETIT */
     /* create colors, where is 1-5 is number, the second place is color of object and the third place is color of background*/
     //painting walls
     init_pair(1, COLOR_MAGENTA, COLOR_BLACK);
@@ -515,7 +509,7 @@ void EndMessage(){
     attroff(COLOR_PAIR(3));
 }
 void MapSetUp(int *sirina, int *visota, int *massive, int PervoyePolozenie, int VtoroyePolozenie, int nomerKarti, chtype cvet){
-    /* the idea for creating maps was taken from the site https://www.codeproject.com/Questions/1144186/Map-creating-using-ncurses */
+    
     /* checking map */
     while(1){
         if(nomerKarti >= 0){
@@ -974,7 +968,6 @@ void moving(int input){
     }
 
 
-    /* stoled and changed the code from the website https://coderoad.ru/48229214/%D0%9F%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D0%B5-%D1%81%D0%B8%D0%BC%D0%B2%D0%BE%D0%BB%D0%B0-%D0%B8%D0%B7-%D0%BE%D0%BF%D1%80%D0%B5%D0%B4%D0%B5%D0%BB%D0%B5%D0%BD%D0%BD%D1%8B%D1%85-%D0%BA%D0%BE%D0%BE%D1%80%D0%B4%D0%B8%D0%BD%D0%B0%D1%82-%D0%B2-%D0%BE%D0%BA%D0%BD%D0%B5-ncurses */
     /* a variable to check postion in the north (up) */
     //int lookUp = 0;
     int lookUp = mvinch(predmet[character].VtoroyePolozenie - 1, predmet[character].PervoyePolozenie) & A_CHARTEXT;
@@ -1218,7 +1211,7 @@ int Gameplay(int input, int level){
         }        
     }
 
-    /* stoled and changed the code from the website https://tldp.org/HOWTO/html_single/NCURSES-Programming-HOWTO/#WHERETOGETIT */
+   
     if(backTeleportation == false){
 
         for(int i = 0; i < 6; i++){
@@ -1242,266 +1235,3 @@ int Gameplay(int input, int level){
         return level;
     }
 }
-
-
-
-/* THE SECOND GAME */
-
-/* Hello, it's my second game. For its creation I used many literature, such as
-http://ilinblog.ru/article.php?id_article=49
-https://www.youtube.com/watch?v=Q9zkiOClyEo&t=6s&ab_channel=Vectozavr
-https://www.youtube.com/watch?v=xW8skO7MFYw&ab_channel=javidx9
-https://www.purplealienplanet.com/node/20
-https://habr.com/ru/post/187720/
-
-and many another resources :D
-
-for Compile you need to use this:   gcc gamer.c $(ncursesw5-config --cflags) -o gamer -lncursesw -lm
-*/
-
-/*
-#include <stdlib.h>
-#include <locale.h>
-#include <ncurses.h>
-#include <math.h>
-
-void MakeScreen();
-void painting();
-
-
-// create our main function 
-int main()
-{
-    // creating a console screen size X (columns) 
-    int ShirinaKarty;
-    // creating console screen size Y (rows)   
-    int VisotaKarty;   
-    // creating World dimensions            
-    int mapWidth = 16;       
-    int mapHeight = 16;
-
-    // creating a player start position 
-    float PervoyePolozenie = 8.0f;   
-    float VtoroyePolozenie = 8.0f;
-    // ceating a player start rotation 
-    float TreteyePolozenie = 2.0f;      
-    // creating a field of view    
-    float zrenie = 3.14159f / 2.0f; 
-    // creating a maximum rendering distance 
-    float distancia = 16.0f; 
-
-    char stena = '#';
-
-    int vichod = 1;
-
-    // creating a world map, where '#' - wall, '.' - space 
-    char karta[] =                   
-    "################\
-     #..............#\
-     #..............#\
-     #...########...#\
-     #.......#..#...#\
-     #..........#...#\
-     #..............#\
-     #...########...#\
-     #...#...#..#...#\
-     #...#...#..#...#\
-     #..............#\
-     #..............#\
-     #...########...#\
-     #..............#\
-     #..............#\
-     ################";
-
-
-    // Needed to output unicode characters 
-    setlocale(LC_ALL, "");
-    
-    // Initialize ncurses screen
-    MakeScreen();
-    getmaxyx(stdscr, VisotaKarty, ShirinaKarty);   
-
-    // creating a game function
-    while(vichod == 1)
-    {    
-        for(int colona = 0; colona < ShirinaKarty; colona++)
-        {
-            // for each column, calculate the projected ray angle into world space
-            float dalnostZrenia = (TreteyePolozenie - zrenie / 2.0f) + ((float)colona / (float)ShirinaKarty) * zrenie;            
-            float rastoyanie = 0.0f;
-            
-            int StenkaVLob = 0;
-            
-            // creating unit vector for ray in player space 
-            float ZrenieX = sinf(dalnostZrenia); 
-            float ZrenieY = cosf(dalnostZrenia);
-            
-            // find distance to wall
-            while(!StenkaVLob && rastoyanie < distancia)   
-            {
-                // crate resolution 
-                rastoyanie = rastoyanie + 0.5f;
-                
-                int proverkaColony = (int)(PervoyePolozenie + ZrenieX * rastoyanie);
-
-                int proverkaRow = (int)(VtoroyePolozenie + ZrenieY * rastoyanie);
-                
-                // test our code if ray is out of bounds 
-                if(proverkaColony < 0 || (proverkaColony > mapWidth + 1) || proverkaRow < 0 || (proverkaRow > mapHeight + 1)){
-                    StenkaVLob = 1;
-                    rastoyanie = distancia;
-                } else{
-                    if(karta[proverkaColony * mapWidth + proverkaRow] == stena){
-                        StenkaVLob = 1;
-                    }
-                }
-            }    
-            
-            // calculate distance to ceiling and floor 
-            int ceiling = (float)(VisotaKarty / 2.0f) - VisotaKarty / ((float)rastoyanie);
-            int floor = VisotaKarty - ceiling;
-            
-            // shader walls based on distance 
-            const wchar_t* shade;
-
-            // if we close to the wall 
-            if(rastoyanie <= distancia / 4.0){
-                shade = L"\x2588";
-            } 
-            // if we further to the wall 
-            else if(rastoyanie <= distancia / 3.0){
-                shade = L"\x2593";
-
-            } else if(rastoyanie <= distancia / 2.0){
-                shade = L"\x2592";
-
-            } else if(rastoyanie <= distancia){
-                shade = L"\x2591";
-
-            } else{
-                shade = L" ";
-
-            }
-            
-            for(int row = 0; row < VisotaKarty; row++){
-
-                if(ceiling  + 1 > row){
-                    mvaddch(row, colona, '`');
-
-                } else if(row > ceiling  && row < floor + 1){
-                    mvaddwstr(row, colona, shade);
-
-                } else{
-                    // Shade floor based on distance
-                    float b = 1.0f - (((float)row - VisotaKarty / 2.0f) / ((float)VisotaKarty / 2.0f));
-                    
-					if (b < 0.25){
-                        shade = L"#";
-
-                    } else if (b < 0.5){
-                        shade = L"x";
-
-                    } else if (b < 0.75){
-                        shade = L".";
-
-                    } else if (b < 0.9){
-                        shade = L"-";
-
-                    } else{
-                        shade = L" ";
-
-                    }
-                    
-                    mvaddwstr(row, colona, shade);
-                }
-            }
-            
-            refresh();
-        }
-        
-        int input;
-        
-        switch((input = getch())){
-
-            // Move forward and collisions 
-            case KEY_UP:
-            case 'W':
-            case 'w': 
-                PervoyePolozenie = PervoyePolozenie + sinf(TreteyePolozenie) * 0.5f;
-
-                VtoroyePolozenie = VtoroyePolozenie + cosf(TreteyePolozenie) * 0.5f;
-                
-                if(karta[(int)PervoyePolozenie * mapWidth + (int)VtoroyePolozenie] == stena)
-                {
-                    PervoyePolozenie = PervoyePolozenie - sinf(TreteyePolozenie) * 0.5f;
-
-                    VtoroyePolozenie = VtoroyePolozenie - cosf(TreteyePolozenie) * 0.5f;
-                } 
-                
-                break;
-            
-            case KEY_DOWN:
-            case 'S':
-            case 's':
-                // Move backward and collisions 
-                PervoyePolozenie = PervoyePolozenie - sinf(TreteyePolozenie) * 0.5f;
-                VtoroyePolozenie = VtoroyePolozenie - cosf(TreteyePolozenie) * 0.5f;
-                
-                if(karta[(int)PervoyePolozenie * mapWidth + (int)VtoroyePolozenie] == stena){
-                    PervoyePolozenie = PervoyePolozenie + sinf(TreteyePolozenie) * 0.5f;
-
-                    VtoroyePolozenie = VtoroyePolozenie + cosf(TreteyePolozenie) * 0.5f;
-                }
-                
-                break;
-            
-            case KEY_LEFT:
-            case 'A':
-            case 'a': 
-                // Rotate left 
-                TreteyePolozenie = TreteyePolozenie - 0.1f;
-
-                break;
-
-            case KEY_RIGHT:
-            case 'D':
-            case 'd':
-            // Rotate right 
-                TreteyePolozenie = TreteyePolozenie + 0.1f;
-
-                break;
-        
-            default:{
-                // Any key to exit
-                vichod = 0;
-
-                break;
-            }
-        }    
-    }
-    
-    attroff(COLOR_PAIR(1));
-
-    endwin();        
-}
-
-void MakeScreen(){
-    // Needed to output unicode characters 
-    setlocale(LC_ALL, "");
-    
-    // Initialize ncurses screen 
-    initscr();
-    noecho();
-    curs_set(0);
-    painting();
-    keypad(stdscr, TRUE);
-}
-void painting(){
-    start_color();
-    init_color(COLOR_GREEN, 0, 700, 200);
-	init_pair(1, COLOR_CYAN, COLOR_BLACK);
-
-	attron(COLOR_PAIR(1));
-}
-
-*/
